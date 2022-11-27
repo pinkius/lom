@@ -1,0 +1,8 @@
+
+
+<div *ngFor="let job of jobs">
+    {{job.displayName}} {{job.currentLevel}} {{job.currentXp}} {{job.nextLevelXp}}
+
+    <ngb-progressbar type="success" [value]="getJobPercentComplete(job)"></ngb-progressbar>
+    <button class="btn btn-primary" (click)="incrementJob(job)">+</button>
+</div>
