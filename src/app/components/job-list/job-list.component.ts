@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivitiesService, LomJob } from 'src/app/services/activities.service';
+import { JobFamily, JobsService, LomJob } from 'src/app/services/jobs.service';
 
 @Component({
   selector: 'app-job-list',
@@ -8,18 +8,18 @@ import { ActivitiesService, LomJob } from 'src/app/services/activities.service';
 })
 export class JobListComponent implements OnInit {
 
-  constructor(private activitiesService: ActivitiesService) { }
+  constructor(private jobsService: JobsService) { }
 
-  jobs: LomJob[] = [];
+  jobFamilies: JobFamily[] = [];
 
   ngOnInit(): void {
-    this.jobs = this.activitiesService.getAllJobs();
-    this.activitiesService.startEventTimer();
+    this.jobFamilies = this.jobsService.getJobFamilies();
+    this.jobsService.startEventTimer();
 
   }
 
   incrementJob(job: LomJob) {
-    this.activitiesService.incrementJob(job, 1);
+    this.jobsService.incrementJob(job, 1);
   }
 
   getJobPercentComplete(job: LomJob): number {

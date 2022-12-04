@@ -1,8 +1,19 @@
 
-
-<div *ngFor="let job of jobs">
-    {{job.displayName}} {{job.currentLevel}} {{job.currentXp}} {{job.nextLevelXp}}
-
-    <ngb-progressbar type="success" [value]="getJobPercentComplete(job)"></ngb-progressbar>
-    <button class="btn btn-primary" (click)="incrementJob(job)">+</button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4" *ngFor="let family of jobFamilies">
+            <h3>{{family.displayName}}</h3>
+            <div *ngFor="let job of family.jobs">
+                <div class="row">
+                    <div class="col">
+                        {{job.displayName}} {{job.currentLevel}} {{job.currentXp}} {{job.nextLevelXp}}
+                        <button class="btn btn-primary float-right" (click)="incrementJob(job)">+</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12"><ngb-progressbar type="success" [value]="getJobPercentComplete(job)"></ngb-progressbar></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

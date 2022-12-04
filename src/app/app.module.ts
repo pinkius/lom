@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { JobListComponent } from './components/job-list/job-list.component';
-import { ActivitiesService } from './services/activities.service';
+import { JobsService } from './services/jobs.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -18,7 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule
   ],
   providers: [
-    ActivitiesService
+    JobsService
   ],
   bootstrap: [AppComponent]
 })
