@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { JobFamily, JobsService, LomJob } from 'src/app/services/jobs.service';
+import { JobFamily, JobsService, JobDefinition } from 'src/app/services/jobs.service';
 
 @Component({
   selector: 'app-job-list',
@@ -18,12 +18,23 @@ export class JobListComponent implements OnInit {
 
   }
 
-  incrementJob(job: LomJob) {
-    this.jobsService.incrementJob(job, 1);
+  incrementJob(job: JobDefinition) {
+    this.jobsService.incrementJob(job, 50);
   }
 
-  getJobPercentComplete(job: LomJob): number {
+  getJobPercentComplete(job: JobDefinition): number {
     return job.currentXp;
   }
 
+  getDisplayed(job: JobDefinition): boolean {
+    return job.displayed;
+  }
+
+  getCash(): number {
+    return this.jobsService.getPlayer().cash;
+  }
+
+  activateJob(job: JobDefinition) {
+    this.jobsService.activateJob(job);
+  }
 }

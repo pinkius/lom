@@ -1,9 +1,16 @@
 
 <div class="container-fluid">
     <div class="row">
+        <div class="col-md-4">
+            <h3>Player</h3>
+            Cash: {{getCash()}}
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-4" *ngFor="let family of jobFamilies">
             <h3>{{family.displayName}}</h3>
-            <div *ngFor="let job of family.jobs">
+            <div *ngFor="let job of family.jobs" (click)="activateJob(job)">
+                <div *ngIf="getDisplayed(job)">
                 <div class="row">
                     <div class="col">
                         {{job.displayName}} {{job.currentLevel}} {{job.currentXp}} {{job.nextLevelXp}}
@@ -11,8 +18,9 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12"><ngb-progressbar type="success" [value]="getJobPercentComplete(job)"></ngb-progressbar></div>
+                    <div class="col-12"><ngb-progressbar type="warning" [value]="getJobPercentComplete(job)"></ngb-progressbar></div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
