@@ -7,9 +7,9 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4" *ngFor="let family of jobFamilies">
-            <h3>{{family.displayName}}</h3>
-            <div *ngFor="let job of family.jobs" (click)="activateJob(job)">
+        <div class="col-md-4" *ngFor="let key of jobFamilies.keys()">
+            <h3>{{key}}</h3>
+            <div *ngFor="let job of getJobsForFamily(key)" (click)="activateJob(job)">
                 <div *ngIf="getDisplayed(job)">
                 <div class="row">
                     <div class="col">
@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12"><ngb-progressbar type="warning" [value]="getJobPercentComplete(job)"></ngb-progressbar></div>
+                    <div class="col-12"><ngb-progressbar [type]="getProgressBarTypeForJob(job)" [value]="getJobPercentComplete(job)"></ngb-progressbar></div>
                 </div>
             </div>
             </div>

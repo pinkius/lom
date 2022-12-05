@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { JobFamily, JobsService, JobDefinition } from 'src/app/services/jobs.service';
+import { JobsService, JobDefinition } from 'src/app/services/jobs.service';
 
 @Component({
   selector: 'app-job-list',
@@ -10,12 +10,13 @@ export class JobListComponent implements OnInit {
 
   constructor(private jobsService: JobsService) { }
 
-  jobFamilies: JobFamily[] = [];
+  jobFamilies: Map<string, string> = new Map<string, string>([
+    ["work", "Work"],
+    ["study", "Study"]
+  ]);
 
   ngOnInit(): void {
-    this.jobFamilies = this.jobsService.getJobFamilies();
     this.jobsService.startEventTimer();
-
   }
 
   incrementJob(job: JobDefinition) {
@@ -36,5 +37,13 @@ export class JobListComponent implements OnInit {
 
   activateJob(job: JobDefinition) {
     this.jobsService.activateJob(job);
+  }
+
+  getJobsForFamily(family: string): JobDefinition[] {
+    return this.jobsService.getJobsForFamily(family);
+  }
+
+  getProgressBarTypeForJob(job: JobDefinition): string {
+    return (job.id === this.jobsService.getPlayer().activeWorkJobId || job.id === this.jobsService.getPlayer().activeStudyJobId)?"success":"warning";
   }
 }

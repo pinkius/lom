@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CheckboxRequiredValidator } from '@angular/forms';
 import { Subscription, interval } from 'rxjs';
-import { JOB_FAMILIES } from './jobs';
+import { ALL_JOBS } from './jobs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,22 +9,19 @@ export class JobsService {
 
   constructor() { }
 
-  private player: Player = { cash: 0 };
+  private player: Player = { cash: 0, activeWorkJobId: 'intern', activeStudyJobId: 'concentration' };
 
   private timerSubscription: Subscription|null = null;
-
-  public getJobFamilies(): JobFamily[] {
-    return JOB_FAMILIES;
-  }
 
   public getPlayer(): Player {
     return this.player;
   }
 
   public activateJob(job: JobDefinition) {
-    const fam = JOB_FAMILIES.find(f => f.id === 'work');
-    if (fam) {
-      fam.activeJobId = job.id;
+    if (job.family === 'work') {
+      this.player.activeWorkJobId = job.id;
+    } else if (job.family === 'study') {
+      this.player.activeStudyJobId = job.id;
     }
   }
 
@@ -45,39 +41,41 @@ export class JobsService {
     }
   }
 
+  private getJobFromId(jobId: string): JobDefinition|undefined {
+    return ALL_JOBS.find(job => jobId === job.id);
+  }
+
   private getJobLevel(jobId: string): number {
     var level = 0;
-    JOB_FAMILIES.forEach(family => {
-      const j = family.jobs.find(job => jobId === job.id);
-      if (j) {
-        level = j.currentLevel;
-      }
-    });
+
+    const j = this.getJobFromId(jobId);
+    if (j) {
+      level = j.currentLevel;
+    }
     return level;
   }
 
   // Come back to this - see if it needs preformance improvements (eg just find jobs which depend on the one being incremented)
   private checkRequirements() {
-    JOB_FAMILIES.forEach(family => {
-      family.jobs.forEach(j => {
-        j.displayed = j.displayRequirements.map((predicate) => { return this.getJobLevel(predicate.jobId) >= predicate.minimumLevel }).reduce((previous, current) => { return previous && current}, true);
-      });
+    ALL_JOBS.forEach(j => {
+      j.displayed = j.displayRequirements.map((predicate) => { return this.getJobLevel(predicate.jobId) >= predicate.minimumLevel }).reduce((previous, current) => { return previous && current}, true);
     });
   }
 
   private incrementActivities() {
-    JOB_FAMILIES.forEach(family => {
-      const job = family.jobs.find(j => family.activeJobId === j.id);
-      if (job) {
-        this.incrementJob(job, 1);
-        this.incrementSalary(job);
-      }
-    });
+    const workJob = this.getJobFromId(this.player.activeWorkJobId);
+    if (workJob) {
+      this.incrementJob(workJob, 1);
+      this.incrementSalary(workJob);
+    }
+    const studyJob = this.getJobFromId(this.player.activeStudyJobId);
+    if (studyJob) {
+      this.incrementJob(studyJob, 1);
+    }
   }
 
-  public getDisplayed(jobId: string): boolean {
-    console.info("Hello: " + jobId);
-    return true;
+  public getJobsForFamily(family: string): JobDefinition[] {
+    return ALL_JOBS.filter(job => job.family === family);
   }
 
   startEventTimer() {
@@ -90,16 +88,10 @@ export class JobsService {
   }
 }
 
-export interface JobFamily {
-  id: string;
-  displayName: string;
-  jobs: JobDefinition[];
-  activeJobId: string
-}
-
 export interface JobDefinition {
   id: string;
   displayName: string;
+  family: string;
   baseSalary?: number;
   currentLevel: number;
   currentXp: number;
@@ -117,5 +109,6 @@ export interface JobPredicate {
 
 export interface Player {
   cash: number;
-
+  activeWorkJobId: string;
+  activeStudyJobId: string;
 }
